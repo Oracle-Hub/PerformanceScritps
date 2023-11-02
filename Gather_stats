@@ -1,0 +1,92 @@
+With out Backup option 
+-----------------------
+
+exec fnd_stats.GATHER_TABLE_STATS( OWNNAME => 'XXIRIS', TABNAME=> 'OE_ORDER_LINES_ALL',DEGREE => 24 );
+exec fnd_stats.GATHER_INDEX_STATS ( OWNNAME => 'XXIRIS', INDNAME=> 'XXIRIS_OE_ORDER_LINES_N20',DEGREE => 24 );
+
+select owner,table_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  table_name like 'XXIRIS_MED_COMMUNICATIONS';
+select owner,table_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  owner like 'ONT' and last_analyzed > SYSDATE -1;
+select owner,table_name,index_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_indexes where  owner like 'ONT' and last_analyzed > SYSDATE -1 order by last_analyzed desc;
+
+
+--- Gather Schema Stats 
+-------------------------
+
+Without backup option 
+------------------------------
+exec FND_STATS.GATHER_SCHEMA_STATS(schemaname=> 'XXIRIS' ,options => 'GATHER AUTO',DEGREE => 24);
+exec FND_STATS.GATHER_SCHEMA_STATS(schemaname=> 'APPLSYS', options => 'GATHER AUTO',DEGREE => 24);
+
+----------------------------
+With Backup option.
+---------------------------
+
+SQL> EXECUTE DBMS_STATS.UPGRADE_STAT_TABLE('APPLSYS','FND_STATTAB');
+ 
+PL/SQL procedure successfully completed.
+
+SQL> exec FND_STATS.GATHER_SCHEMA_STATS(schemaname=> 'APPLSYS',internal_flag=> 'BACKUP',options => 'GATHER AUTO',DEGREE => 24);
+
+
+If's running long, you need find where it's currently 
+
+To find where it's currently, because It run in the background, nobody knows where it's, so check from v$longops.
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT SID, SERIAL#, OPNAME, TARGET, SOFAR, TOTALWORK, UNITS,
+TO_CHAR(START_TIME,'DD/MON/YYYY HH24:MI:SS') START_TIME,
+TO_CHAR(LAST_UPDATE_TIME,'DD/MON/YYYY HH24:MI:SS') LAST_UPDATE_TIME,
+TIME_REMAINING/60 AS "MTS REMANING", ELAPSED_SECONDS, MESSAGE, USERNAME
+FROM gV$SESSION_LONGOPS
+WHERE TIME_REMAINING != 0
+order by last_update_time desc;
+
+select owner,table_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  table_name like 'XXIRIS_MED_COMMUNICATIONS';
+select owner,table_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  owner like 'ONT' and last_analyzed > SYSDATE -1;
+select owner,table_name,index_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_indexes where  owner like 'ONT' and last_analyzed > SYSDATE -1 order by last_analyzed desc;
+
+
+--- Gather aud$ from sys schema on PDB
+-----------------------------------------
+
+set time on timing on
+begin
+DBMS_STATS.GATHER_TABLE_STATS(ownname => 'SYS', tabname =>'AUD$', ESTIMATE_PERCENT => DBMS_STATS.AUTO_SAMPLE_SIZE,METHOD_OPT => 'FOR ALL COLUMNS SIZE AUTO', CASCADE => TRUE);
+end;
+/
+
+
+select owner,table_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  table_name like 'XXIRIS_MED_COMMUNICATIONS';
+
+select owner,table_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  owner like 'ONT' and last_analyzed > SYSDATE -1;
+
+select owner,table_name,index_name,owner,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_indexes where  owner like 'ONT' and last_analyzed > SYSDATE -1 order by last_analyzed desc;
+
+
+SQL> select table_name,STALE_STATS,to_char(last_analyzed,'DD-MON-YYYY HH24:MI:SS') last_analyzed,num_rows from dba_tab_statistics where table_name like '%AUD$';
+ 
+TABLE_NAME           STALE_STATS          LAST_ANALYZED                NUM_ROWS
+-------------------- -------------------- -------------------------- ----------
+AUD$                 YES                  11-MAY-2023 21:07:15       1450967296
+
+
+SELECT *
+  FROM ( SELECT m.table_owner
+              , m.table_name
+              , t.last_analyzed
+             , t.STATUS
+              , m.inserts
+              , m.updates
+              , m.deletes
+              , t.num_rows
+              , ( m.inserts + m.updates + m.deletes ) / CASE WHEN t.num_rows IS NULL OR t.num_rows = 0 THEN 1 ELSE t.num_rows END "Change Factor"
+           FROM dba_tab_modifications m
+              , dba_tables t
+           WHERE t.owner = m.table_owner
+             AND t.table_name = m.table_name
+             AND m.inserts + m.updates + m.deletes > 1
+             AND m.table_owner='XXIRIS'
+             ORDER BY "Change Factor" DESC
+       )
+/
+
