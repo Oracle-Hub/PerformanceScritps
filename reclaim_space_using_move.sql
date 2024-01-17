@@ -23,7 +23,6 @@ SELECT 'ALTER TABLE '||OWNER||'.'||segment_name||' move PARALLEL 32;' from dba_s
 and bytes/1024/1024/1024 > 2);
 
 
-
 col OWNER for a15
 col TABLE_NAME for a35
 col segment_name for a30
