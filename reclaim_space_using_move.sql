@@ -23,25 +23,37 @@ SELECT 'ALTER TABLE '||OWNER||'.'||segment_name||' move PARALLEL 32;' from dba_s
 and bytes/1024/1024/1024 > 2);
 
 
-set echo on;
-set heading on;
-set time on timing on;
-spool INV-MTL_UNIT_TRANSACTIONS.out
-select distinct sid from v$mystat;
+
+col OWNER for a15
+col TABLE_NAME for a35
 col segment_name for a30
 set line 200
 set pagesize 100
+col INDEX_NAME for a30
+set time on timing on;
+set echo on;
+set heading on;
+spool INV-MTL_UNIT_TRANSACTIONS.out
+select distinct sid from v$mystat;
 select segment_name,segment_type,owner,bytes/1024/1024/1024 "SIZE (GB)" from dba_segments where segment_type = 'TABLE' and segment_name not like 'BIN%' and owner not in ('SYS')
 and bytes/1024/1024/1024 > 2 order by bytes/1024/1024/1024 desc;
+
+select owner,table_name,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  owner like 'INV' and table_name='MTL_UNIT_TRANSACTIONS';
 ALTER TABLE INV.MTL_MATERIAL_TRANSACTIONS move PARALLEL 32;
-ALTER TABLE INV.MTL_SERIAL_NUMBERS move PARALLEL 32;
-ALTER TABLE INV.MTL_UNIT_TRANSACTIONS move PARALLEL 32;
+
+select owner,table_name,index_name,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_indexes where  owner like 'INV' and table_name='MTL_UNIT_TRANSACTIONS';
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N1 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N2 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N3 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N4 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N5 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N6 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N7 REBUILD PARALLEL 32;
+
 spool off;
 set echo off;
 set heading off;
 exit;
-
-
 
 
 
@@ -52,6 +64,14 @@ Since we are rebuilding indexes, It captures stats as well, but let's verify.
 
 
 select 'ALTER INDEX '||OWNER||'.'||INDEX_NAME||' REBUILD PARALLEL 32;' from dba_indexes where table_name='MTL_UNIT_TRANSACTIONS';
+
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N1 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N2 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N3 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N4 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N5 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N6 REBUILD PARALLEL 32;
+ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N7 REBUILD PARALLEL 32;
 
 
 
