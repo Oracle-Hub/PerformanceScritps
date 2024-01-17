@@ -12,6 +12,7 @@ Using MOVE :
 Capture Tables to move grater than 2 GB
 =======================================
 
+column "SIZE (GB)" format 99999.99;
 col segment_name for a30
 set line 200
 set pagesize 100
@@ -29,6 +30,7 @@ and bytes/1024/1024/1024 > 2);
 Now you can append all below entries in sql file and then execute using nohup mode.
 ================================================================================
 col OWNER for a15
+column "SIZE (GB)" format 99999.99;
 col TABLE_NAME for a35
 col segment_name for a30
 set line 200
