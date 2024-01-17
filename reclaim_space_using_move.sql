@@ -48,6 +48,7 @@ select segment_name,segment_type,owner,bytes/1024/1024/1024 "SIZE (GB)" from dba
 and bytes/1024/1024/1024 > 2 order by bytes/1024/1024/1024 desc;
 
 select owner,table_name,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  owner like 'INV' and table_name='MTL_UNIT_TRANSACTIONS';
+
 ALTER TABLE INV.MTL_MATERIAL_TRANSACTIONS move PARALLEL 32;
 
 exec dbms_stats.gather_table_stats(ownname => 'INV',tabname => 'MTL_MATERIAL_TRANSACTIONS' , estimate_percent => DBMS_STATS.AUTO_SAMPLE_SIZE, cascade => TRUE,method_opt => '  FOR ALL COLUMNS SIZE AUTO ' , degree => 32);
