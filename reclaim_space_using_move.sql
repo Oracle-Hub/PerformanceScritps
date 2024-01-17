@@ -41,6 +41,10 @@ and bytes/1024/1024/1024 > 2 order by bytes/1024/1024/1024 desc;
 select owner,table_name,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  owner like 'INV' and table_name='MTL_UNIT_TRANSACTIONS';
 ALTER TABLE INV.MTL_MATERIAL_TRANSACTIONS move PARALLEL 32;
 
+exec dbms_stats.gather_table_stats(ownname => 'INV',tabname => 'MTL_MATERIAL_TRANSACTIONS' , estimate_percent => DBMS_STATS.AUTO_SAMPLE_SIZE, cascade => TRUE,method_opt => '  FOR ALL COLUMNS SIZE AUTO ' , degree => 32);
+
+select owner,table_name,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  owner like 'INV' and table_name='MTL_UNIT_TRANSACTIONS';
+
 select owner,table_name,index_name,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_indexes where  owner like 'INV' and table_name='MTL_UNIT_TRANSACTIONS';
 ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N1 REBUILD PARALLEL 32;
 ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N2 REBUILD PARALLEL 32;
@@ -49,6 +53,7 @@ ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N4 REBUILD PARALLEL 32;
 ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N5 REBUILD PARALLEL 32;
 ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N6 REBUILD PARALLEL 32;
 ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N7 REBUILD PARALLEL 32;
+select owner,table_name,index_name,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_indexes where  owner like 'INV' and table_name='MTL_UNIT_TRANSACTIONS';
 
 spool off;
 set echo off;
