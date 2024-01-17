@@ -37,6 +37,9 @@ select distinct sid from v$mystat;
 select segment_name,segment_type,owner,bytes/1024/1024/1024 "SIZE (GB)" from dba_segments where segment_type = 'TABLE' and segment_name not like 'BIN%' and owner not in ('SYS')
 and bytes/1024/1024/1024 > 2 order by bytes/1024/1024/1024 desc;
 
+select segment_name,segment_type,owner,bytes/1024/1024/1024 "SIZE (GB)" from dba_segments where segment_type = 'INDEX' and segment_name not like 'BIN%' and owner not in ('SYS')
+and bytes/1024/1024/1024 > 2 order by bytes/1024/1024/1024 desc;
+
 select owner,table_name,num_rows,to_char(last_analyzed,'YYYY-MM-DD HH24:MI:SS') last_analyzed from dba_tables where  owner like 'INV' and table_name='MTL_UNIT_TRANSACTIONS';
 ALTER TABLE INV.MTL_MATERIAL_TRANSACTIONS move PARALLEL 32;
 
