@@ -18,11 +18,15 @@ set pagesize 100
 select segment_name,segment_type,owner,bytes/1024/1024/1024 "SIZE (GB)" from dba_segments where segment_type = 'TABLE' and segment_name not like 'BIN%' and owner not in ('SYS')
 and bytes/1024/1024/1024 > 2 order by bytes/1024/1024/1024 desc;
 
+select segment_name,segment_type,owner,bytes/1024/1024/1024 "SIZE (GB)" from dba_segments where segment_type = 'INDEX' and segment_name not like 'BIN%' and owner not in ('SYS')
+and bytes/1024/1024/1024 > 2 order by bytes/1024/1024/1024 desc;
+
 SELECT 'ALTER TABLE '||OWNER||'.'||segment_name||' move PARALLEL 32;' from dba_segments where segment_type = 'TABLE' and segment_name not like 'BIN%' and bytes/1024/1024/1024 in
 (select bytes/1024/1024/1024 "SIZE (GB)" from dba_segments where segment_type = 'TABLE' and segment_name not like 'BIN%' and owner not in ('SYS')
 and bytes/1024/1024/1024 > 2);
 
-
+Now you can append all below entries in sql file and then execute using nohup mode.
+================================================================================
 col OWNER for a15
 col TABLE_NAME for a35
 col segment_name for a30
@@ -64,8 +68,8 @@ exit;
 
 
 
-Followed by Index Rebuild and Gathering Stats and Capture stats info
----------------------------------------------------------------------
+Followed by Index Rebuild and Gathering Stats and Capture stats info- I've included all information in above script, If you need to capture Index alter script, use below script.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Since we are rebuilding indexes, It captures stats as well, but let's verify.
 
