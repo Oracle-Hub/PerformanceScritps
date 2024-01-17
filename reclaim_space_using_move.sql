@@ -71,7 +71,7 @@ exit;
 Followed by Index Rebuild and Gathering Stats and Capture stats info- I've included all information in above script, If you need to capture Index alter script, use below script.
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Since we are rebuilding indexes, It captures stats as well, but let's verify.
+Since we are rebuilding indexes, It captures stats as well, but let's verify. ( upon observation, you don't need to capture stats for Index, it's capturing stats as part of Index rebuild.
 
 
 select 'ALTER INDEX '||OWNER||'.'||INDEX_NAME||' REBUILD PARALLEL 32;' from dba_indexes where table_name='MTL_UNIT_TRANSACTIONS';
