@@ -15,6 +15,7 @@ Capture Tables to move grater than 2 GB
 col segment_name for a30
 set line 200
 set pagesize 100
+col OWNER for a20
 select segment_name,segment_type,owner,bytes/1024/1024/1024 "SIZE (GB)" from dba_segments where segment_type = 'TABLE' and segment_name not like 'BIN%' and owner not in ('SYS')
 and bytes/1024/1024/1024 > 2 order by bytes/1024/1024/1024 desc;
 
