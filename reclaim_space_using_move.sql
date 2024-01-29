@@ -90,3 +90,37 @@ ALTER INDEX INV.MTL_UNIT_TRANSACTIONS_N7 REBUILD PARALLEL 32;
 
 
 
+
+------------------------------
+
+SELECT 'ALTER INDEX ' || OWNER || '.' ||
+INDEX_NAME || ' REBUILD ' ||
+' TABLESPACE ' || TABLESPACE_NAME || ';'
+FROM DBA_INDEXES
+WHERE STATUS='UNUSABLE'
+UNION
+SELECT 'ALTER INDEX ' || INDEX_OWNER || '.' ||
+INDEX_NAME ||
+' REBUILD PARTITION ' || PARTITION_NAME ||
+' TABLESPACE ' || TABLESPACE_NAME || ';'
+FROM DBA_IND_PARTITIONS
+WHERE STATUS='UNUSABLE'
+UNION
+SELECT 'ALTER INDEX ' || INDEX_OWNER || '.' ||
+INDEX_NAME ||
+' REBUILD SUBPARTITION '||SUBPARTITION_NAME||
+' TABLESPACE ' || TABLESPACE_NAME || ';'
+FROM DBA_IND_SUBPARTITIONS
+WHERE STATUS='UNUSABLE';
+
+--------------------------------------
+
+Or another way to rebuil sub partition. 
+------------
+  -- To find Index name 
+select 'ALTER INDEX '||OWNER||'.'||INDEX_NAME||' REBUILD PARALLEL 32;' from dba_indexes where table_name='WF_USER_ROLE_ASSIGNMENTS';
+--- and then rebuild sub partition 
+select 'ALTER INDEX '||INDEX_OWNER||'.'||INDEX_NAME||' REBUILD partition '||partition_name|| ' PARALLEL 32;' from dba_ind_partitions where index_name ='WF_USER_ROLE_ASSIGNMENTS_N4';
+
+
+
