@@ -28,7 +28,8 @@ AWR Analysis
 
 -------------------------------------------------------------------------
 
----------------Under  Wait Events Statistics  ------------------From Wait Events statistics, will focus on "Foreground Wait Class" , "Foreground Wait Events" , "Background Wait Events" 
+---------------Under  Wait Events Statistics  ------------------
+This section shows a breakdown of the main wait events in the database including foreground and background database wait events 
 ++++From Wait event statistics, focus on "Foreground Wait Class",  "Foreground Wait Events"  ,  "Background Wait Events"   -- %DB Time
 
       Time Model Statistics
@@ -36,7 +37,8 @@ AWR Analysis
       Operating System Statistics - Detail
       Foreground Wait Class    -- DB CPU, Network	, Cluster, User I/O, Application, Concurrency, Configuration, Administrative	and others.
       Foreground Wait Events   -- TCP Socket (KGAS), enq: UL - contention, gc buffer busy release, enq: TX - index contention, etc like that ( which is assiciated with User process ) 
-      Background Wait Events   -- log file parallel write, db file parallel write, latch: MGA heap latch, PGA memory operation ( which is associated with Oracle background process ) 
+      Background Wait Events   -- This section is relevant to the background process wait events.
+                               log file parallel write, db file parallel write, latch: MGA heap latch, PGA memory operation ( which is associated with Oracle background process ) 
       Wait Event Histogram
       Wait Event Histogram (up to 64 us)
       Wait Event Histogram (up to 32 ms)
