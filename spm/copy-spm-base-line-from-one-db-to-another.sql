@@ -1,4 +1,10 @@
+Transporting SQL PLAN Baselines from One Database to Another. (Doc ID 880485.1)
 
+https://dbaclass.com/article/migrating-sql-baselines-from-one-database-to-another/
+https://dbaclass.com/article/migrate-sql-profiles-from-one-database-to-another/
+
+  
+  
 -------
 Crate staging table
 
