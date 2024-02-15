@@ -1,0 +1,152 @@
+======================================
+AWR Analysis
+=====================================
+
+1) Main Report
+
+    Report Summary   - Report summary will have information about "Top ADDM Findings by Average Active Sessions", "Load Profile",  "Instance Efficiency Percentages (Target 100%)" , "Top 10 Foreground Events by Total Wait Time" , "Wait Classes by Total Wait Time" , statics for memory and shared pool etc.
+    Wait Events Statistics
+    SQL Statistics
+    Instance Activity Statistics
+    IO Stats
+    Buffer Pool Statistics
+    Advisory Statistics
+    Wait Statistics
+    Undo Statistics
+    Latch Statistics
+    Segment Statistics
+    Dictionary Cache Statistics
+    Library Cache Statistics
+    Memory Statistics
+    Replication Statistics (GoldenGate, XStream)
+    Advanced Queuing
+    Resource Limit Statistics
+    Shared Server Statistics
+    Initialization Parameters
+    Active Session History (ASH) Report
+    ADDM Reports
+
+-------------------------------------------------------------------------
+
+---------------Under  Wait Events Statistics  ------------------From Wait Events statistics, will focus on "Foreground Wait Class" , "Foreground Wait Events" , "Background Wait Events" 
+++++From Wait event statistics, focus on "Foreground Wait Class",  "Foreground Wait Events"  ,  "Background Wait Events"   -- %DB Time
+
+      Time Model Statistics
+      Operating System Statistics
+      Operating System Statistics - Detail
+      Foreground Wait Class    -- DB CPU, Network	, Cluster, User I/O, Application, Concurrency, Configuration, Administrative	and others.
+      Foreground Wait Events   -- TCP Socket (KGAS), enq: UL - contention, gc buffer busy release, enq: TX - index contention, etc like that ( which is assiciated with User process ) 
+      Background Wait Events   -- log file parallel write, db file parallel write, latch: MGA heap latch, PGA memory operation ( which is associated with Oracle background process ) 
+      Wait Event Histogram
+      Wait Event Histogram (up to 64 us)
+      Wait Event Histogram (up to 32 ms)
+      Wait Event Histogram (up to 2 sec)
+      Wait Event Histogram (up to 2 min)
+      Wait Event Histogram (up to 1 hr)
+      Service Statistics
+      Service Wait Class Stats
+      Top 10 Channel Waits
+      Top Process Types by Wait Class
+      Top Process Types by CPU Used
+
+--------------------Under SQL Statistics -----------------------
+
+++++ Mostly will focus on " 
+
+        SQL ordered by Elapsed Time   ---will look for  "% Total DB Time" and then executions, if executions are less but "%Total DB Time" is high, then we have to drill down further.
+        SQL ordered by CPU Time       -- Will look for "%Total"  and then executions 
+        SQL ordered by User I/O Wait Time
+        SQL ordered by Gets
+        SQL ordered by Reads
+        SQL ordered by Physical Reads (UnOptimized)
+        SQL ordered by Offload Eligible Bytes
+        SQL ordered by Executions
+        SQL ordered by Parse Calls
+        SQL ordered by Sharable Memory
+        SQL ordered by Version Count
+        SQL ordered by Cluster Wait Time
+        Complete List of SQL Text
+
+
+--------------  IO Stats   ------------- No need to focus 
+        
+        IOStat by Function summary
+        IOStat by Filetype summary
+        IOStat by Function/Filetype summary
+        Tablespace IO Stats
+        File IO Stats
+
+------------ Buffer Pool Statistics  -----------------No need to focus 
+      Buffer Pool Statistics
+      Checkpoint Activity
+
+
+----------- Advisory Statistics  ----------------- will look for statitics based on performance 
+      Instance Recovery Stats
+      MTTR Advisory
+      Buffer Pool Advisory
+      PGA Aggr Summary
+      PGA Aggr Target Stats
+      PGA Aggr Target Histogram
+      PGA Memory Advisory
+      Shared Pool Advisory
+      SGA Target Advisory
+      Streams Pool Advisory
+      Java Pool Advisory
+
+
+--------  Wait Statistics   -----------------No need to focus 
+      Buffer Wait Statistics
+      Enqueue Activity
+
+--------- Undo Statistics-----------------No need to focus 
+      Undo Segment Summary
+      Undo Segment Stats
+
+--------  Latch Statistics-----------------No need to focus 
+      Latch Activity
+      Latch Sleep Breakdown
+      Latch Miss Sources
+      Mutex Sleep Summary
+      Parent Latch Statistics
+      Child Latch Statistics
+
+--------  Segment Statistics   - Sometimes we may, but not all the times 
+      Segments by Logical Reads
+      Segments by Physical Reads
+      Segments by Physical Read Requests
+      Segments by UnOptimized Reads
+      Segments by Optimized Reads
+      Segments by Direct Physical Reads
+      Segments by Physical Writes
+      Segments by Physical Write Requests
+      Segments by Direct Physical Writes
+      Segments by Table Scans
+      Segments by DB Blocks Changes
+      Segments by Row Lock Waits
+      Segments by ITL Waits
+      Segments by Buffer Busy Waits
+      Segments by Global Cache Buffer Busy
+      Segments by CR Blocks Received
+      Segments by Current Blocks Received
+      Segments by Global Cache Remote Grants
+
+----- Rest we mostly ignore them -------------
+
+----- Active Session History (ASH) Report ----- we will always look at this section 
+
+      Top SQL with Top Events
+      Top SQL with Top Row Sources
+      Top Sessions
+      Top Blocking Sessions
+      Top PL/SQL Procedures
+      Top Events
+      Top Event P1/P2/P3 Values
+      Top DB Objects
+      Activity Over Time
+
+-------- ADDM Recommendations -----------------------
+
+
+
+
