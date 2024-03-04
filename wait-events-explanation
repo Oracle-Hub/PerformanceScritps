@@ -1,0 +1,35 @@
+wait events under User I/O
+--------------------------
+
+These events are related to I/O operations that occur when accessing user data. Here are some common User I/O wait events:
+	
+	
+	1. db file sequential read:
+	
+	This event occurs when a session reads a single block from a data file sequentially (e.g., during index scans or table scans).
+	It’s often associated with SELECT statements.
+	
+	2. db file scattered read:
+	
+	Similar to sequential read, but it involves reading multiple non-contiguous blocks from a data file.
+	Commonly seen during full table scans.
+	
+	3. direct path read:
+	
+	Used for parallel query operations.
+	Sessions read data directly into PGA (Program Global Area) memory without using the buffer cache.
+	
+	4. direct path write:
+	
+	Similar to direct path read, but for write operations.
+	Used during parallel DML (Data Manipulation Language) operations.
+	
+	5. log file sync:
+	
+	Occurs during commit operations.
+	The session waits for the redo log buffer to be flushed to disk.
+	
+	6. log file parallel write:
+	
+	Writes redo log entries to disk in parallel.
+	Associated with high commit rates.
