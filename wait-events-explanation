@@ -33,3 +33,35 @@ These events are related to I/O operations that occur when accessing user data. 
 	
 	Writes redo log entries to disk in parallel.
 	Associated with high commit rates.
+
+
+System I/O wait events in Oracle. These events are related to background process I/O. 
+-------------------------------------------------------------------------------------
+
+Here are some common System I/O wait events:
+
+1. db file parallel write:
+
+This event occurs when the Database Writer (DBWR) process writes data blocks to disk in parallel.
+It’s associated with buffer cache flushing.
+
+2. log file parallel write:
+
+Similar to the previous event, but specifically for writing redo log entries to disk in parallel.
+High commit rates can trigger this wait event.
+
+3. log file sync:
+Occurs during commit operations.
+The session waits for the redo log buffer to be flushed to disk.
+Ensures data durability.
+
+4. control file parallel write:
+
+Involves writing to the control files (used for database metadata).
+Associated with administrative tasks or configuration changes.
+
+5. direct path read/write:
+
+Used for parallel query operations.
+Sessions read or write data directly into PGA memory without using the buffer cache.
+
