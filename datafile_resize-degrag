@@ -1,0 +1,364 @@
+ts_data_file_list.sql
+------------------------
+
+
+SET PAGESIZE 9999;
+SET LINESIZE 300;
+SET FEEDBACK OFF ;
+SET VERIFY OFF ;
+
+COLUMN report_name NEW_VALUE report_name NOPRINT;
+
+SELECT    '/tmp/ts_data_file_list_'
+       || SYS_CONTEXT ('USERENV', 'DB_NAME')
+       || '_'
+       || '&1'
+       || '.lst'   report_name
+  FROM DUAL;
+
+COLUMN tablespace_name FOR a30
+COLUMN datafile_name FORMAT a92
+
+SPOOL &report_name
+
+SELECT df.file_id
+     , df.tablespace_name
+     , df.file_name                                                 datafile_name
+     , ROUND (df.bytes / 1024 / 1024 / 1024)                        total_size_gb
+     , NVL (ROUND ((used.used_bytes / 1024 / 1024 / 1024), 0), 2)   used_gb
+     , NVL (ROUND ((free.free_bytes / 1024 / 1024 / 1024), 0), 2)   free_gb
+  FROM dba_data_files  df
+     , (  SELECT file_id, SUM (bytes) used_bytes
+            FROM dba_extents
+        GROUP BY file_id) used
+     , (  SELECT file_id, SUM (bytes) free_bytes
+            FROM dba_free_space
+        GROUP BY file_id) free
+ WHERE 1 = 1
+   AND df.tablespace_name = UPPER ('&&1')
+   AND df.file_id = used.file_id(+)
+   AND df.file_id = free.file_id(+)
+order by df.file_id
+/
+
+exit
+
+------------------------------------------------------
+high_water_mark_ts.sql
+
+set linesize 160
+column file_name format a100;
+column tablespace_name format a30;
+column highwater format 999999999999;
+set pagesize 9999
+
+spool ts_highwater_makers
+select a.tablespace_name
+,a.file_name
+,(b.maximum+c.blocks-1)*d.db_block_size highwater
+from dba_data_files a
+,(select file_id,max(block_id) maximum
+from dba_extents
+group by file_id) b
+,dba_extents c
+,(select value db_block_size
+from v$parameter
+where name='db_block_size') d
+where a.file_id = b.file_id
+and c.file_id = b.file_id
+and c.block_id = b.maximum
+and a.tablespace_name = upper('&tablespace_name')
+order by a.tablespace_name,a.file_name
+/
+
+spool off
+exit
+
+--------------------------------------------------------------------
+findext.sql
+------------
+-- FINDEXT.SQL
+
+-- This script lists all the extents contained in that datafile,
+-- the block_id where the extent starts,
+-- and how many blocks the extent contains.
+-- It also shows the owner, segment name, and segment type.
+
+-- Input: FILE_ID from DBA_DATA_FILES or FILE# from V$DATAFILE
+
+SET ECHO OFF
+SET PAGESIZE 9999
+SET LINESIZE 160
+
+/*
+column tablespace_name for a30
+column file_name format a90
+select tablespace_name, file_name, file_id
+from dba_data_files
+where tablespace_name = upper('&&tablespace_name')
+order by file_id;
+*/
+
+spool segment_extent_summary
+ttitle -
+center 'Segment Extent Summary' skip 2
+
+col ownr format a8 heading 'Owner' justify c
+col type format a8 heading 'Type' justify c trunc
+col name format a30 heading 'Segment Name' justify c
+col exid format 990 heading 'Extent#' justify c
+col fiid format 9990 heading 'File#' justify c
+col blid format 9999990 heading 'Block#' justify c
+col blks format 9,999,990 heading 'Blocks' justify c
+
+select owner ownr, segment_name name, segment_type type, extent_id extent_id, file_id file_id, block_id block_id, blocks blocks
+from dba_extents
+where file_id = &file_id
+order by block_id
+/
+spool off
+
+--------------------------------------------
+
+A_shrink_datafile.sql
+---------------------
+-- SHRINK_DATAFILE.SQL
+
+-- This script lists the object names and types that must be moved in order to resize a datafile to a specified smaller size
+
+-- Input: FILE_ID from DBA_DATA_FILES or FILE# from V$DATAFILE
+-- Size in bytes that the datafile will be resized to
+
+set linesize 300
+SET SERVEROUTPUT ON
+
+DECLARE
+     V_FILE_ID NUMBER;
+     V_BLOCK_SIZE NUMBER;
+     V_RESIZE_SIZE NUMBER;
+     V_RESIZE_SIZE_GB NUMBER;
+BEGIN
+     V_FILE_ID := &FILE_ID;
+     V_RESIZE_SIZE_gb := &RESIZE_FILE_TO_GB;
+     V_RESIZE_SIZE := V_RESIZE_SIZE_GB * 1024 * 1024 * 1024 ;
+
+     SELECT BLOCK_SIZE INTO V_BLOCK_SIZE FROM V$DATAFILE WHERE FILE# = V_FILE_ID;
+
+     DBMS_OUTPUT.PUT_LINE('.');
+     DBMS_OUTPUT.PUT_LINE('.');
+     DBMS_OUTPUT.PUT_LINE('.');
+     DBMS_OUTPUT.PUT_LINE('OBJECTS IN FILE '||V_FILE_ID||' THAT MUST MOVE IN ORDER TO RESIZE THE FILE TO '||V_RESIZE_SIZE||' BYTES');
+     DBMS_OUTPUT.PUT_LINE('===================================================================');
+     DBMS_OUTPUT.PUT_LINE('NON-PARTITIONED OBJECTS');
+     DBMS_OUTPUT.PUT_LINE('===================================================================');
+
+                 dbms_output.put_line( 'OWNER' || CHR(9) || 'SEGEMENT_NAME' || CHR(9) || 'OBJECT_TYPE');
+     for my_record in (
+          SELECT DISTINCT(OWNER || chr(9) || SEGMENT_NAME||chr(9)||SEGMENT_TYPE) ONAME
+          FROM DBA_EXTENTS
+          WHERE (block_id + blocks-1)*V_BLOCK_SIZE > V_RESIZE_SIZE
+          AND FILE_ID = V_FILE_ID
+          AND SEGMENT_TYPE NOT LIKE '%PARTITION%'
+          ORDER BY 1) LOOP
+               DBMS_OUTPUT.PUT_LINE(my_record.ONAME);
+     END LOOP;
+
+     DBMS_OUTPUT.PUT_LINE('===================================================================');
+     DBMS_OUTPUT.PUT_LINE('PARTITIONED OBJECTS');
+     DBMS_OUTPUT.PUT_LINE('===================================================================');
+
+                 dbms_output.put_line( 'OWNER' || CHR(9) || 'SEGEMENT_NAME' || CHR(9) || 'PARTITION_NAME' || CHR(9) || 'OBJECT_TYPE');
+     for my_record in (
+--          SELECT DISTINCT(OWNER||'.'||SEGMENT_NAME||' - PARTITION = '||PARTITION_NAME||' - OBJECT TYPE = '||SEGMENT_TYPE) ONAME
+          SELECT DISTINCT( OWNER || CHR(9) || SEGMENT_NAME || CHR(9) || PARTITION_NAME || CHR(9) || SEGMENT_TYPE ) ONAME
+          FROM DBA_EXTENTS
+          WHERE (block_id + blocks-1)*V_BLOCK_SIZE > V_RESIZE_SIZE
+          AND FILE_ID = V_FILE_ID
+          AND SEGMENT_TYPE LIKE '%PARTITION%'
+          ORDER BY 1) LOOP
+               DBMS_OUTPUT.PUT_LINE(my_record.ONAME);
+     END LOOP;
+
+END;
+/
+
+-----------------------------------------------------------------------------
+ts_data_file_list.sql
+----------------------
+SET PAGESIZE 9999;
+SET LINESIZE 300;
+SET FEEDBACK OFF ;
+SET VERIFY OFF ;
+
+COLUMN report_name NEW_VALUE report_name NOPRINT;
+
+SELECT    '/tmp/ts_data_file_list_'
+       || SYS_CONTEXT ('USERENV', 'DB_NAME')
+       || '_'
+       || '&1'
+       || '.lst'   report_name
+  FROM DUAL;
+
+COLUMN tablespace_name FOR a30
+COLUMN datafile_name FORMAT a92
+
+SPOOL &report_name
+
+SELECT df.file_id
+     , df.tablespace_name
+     , df.file_name                                                 datafile_name
+     , ROUND (df.bytes / 1024 / 1024 / 1024)                        total_size_gb
+     , NVL (ROUND ((used.used_bytes / 1024 / 1024 / 1024), 0), 2)   used_gb
+     , NVL (ROUND ((free.free_bytes / 1024 / 1024 / 1024), 0), 2)   free_gb
+  FROM dba_data_files  df
+     , (  SELECT file_id, SUM (bytes) used_bytes
+            FROM dba_extents
+        GROUP BY file_id) used
+     , (  SELECT file_id, SUM (bytes) free_bytes
+            FROM dba_free_space
+        GROUP BY file_id) free
+ WHERE 1 = 1
+   AND df.tablespace_name = UPPER ('&&1')
+   AND df.file_id = used.file_id(+)
+   AND df.file_id = free.file_id(+)
+order by df.file_id
+/
+
+exit
+-------------------------------------------------------------------------------------------
+show_segment_above_size.sql
+---------------------------
+REM Showing segments which do have extents above specified size
+REM
+REM No block_id/location in file is shown due to fact that the
+REM segment itself is blocking and not a specific extent.
+REM
+REM Input parameters:
+REM &file_id - file_id of file to check
+REM &file_size - desired size of file to shrink to (nnG/nnM/nnK/nn)
+REM
+REM Script meant for Oracle 10 and higher
+REM in case of version lower then Oracle 10 comment out the lines as indicated
+
+
+set serveroutput on size 1000000
+
+declare
+  file_blocks number;
+  file_id number;
+  file_name dba_data_files.file_name%type:=NULL;
+  file_size varchar2(100);
+  file_block_size number:=0;
+  yesno boolean:=TRUE;
+
+  invalid_file_id exception;
+  invalid_file_size exception;
+
+cursor c_blocksize (fno in number) is
+  select t.block_size, d.file_name
+  from dba_tablespaces t, dba_data_files d
+  where d.file_id=fno
+  and   d.tablespace_name=t.tablespace_name;
+
+cursor c_segments (fno in number, block in number) is
+select distinct owner,segment_name,partition_name,segment_type
+from   dba_extents
+where  file_id=fno
+and    block_id >= block
+order  by owner,segment_name;
+
+/* in case of version lower then Oracle 10 comment out following 6 lines!! */
+/*cursor c_recyclebin (fno in number, block in number) is
+select username,original_name,partition_name
+from   recyclebin$, dba_users
+where  file#=fno
+and    block# >= block
+and    owner#=user_id;
+*/
+
+begin
+  file_id:=&file_id;
+  file_size:='&file_size_char';
+
+  dbms_output.put_line('.');
+
+  /* check if correct file is provided and what blocksize is of tablespace */
+  for c_check_blocksize in c_blocksize (file_id)
+  loop
+    file_block_size:=c_check_blocksize .block_size;
+    file_name:=c_check_blocksize.file_name;
+  end loop;
+
+  if file_name is NULL
+  then
+    raise invalid_file_id;
+  end if;
+
+  /* check if a correct filesize is provided */
+  <<isnumber>>
+  for i in 1..length(file_size)
+  loop
+    if (ascii(substr(file_size,i,1)) between 48 and 57)
+    then
+       null; /* number */
+    else
+      yesno:=FALSE;
+      exit isnumber;
+    end if;
+   end loop;
+
+  if (length(file_size) != instr(upper(file_size),'G'))
+     AND (length(file_size) != instr(upper(file_size),'M'))
+     AND (length(file_size) != instr(upper(file_size),'K'))
+     AND (NOT yesno)
+  then
+     raise invalid_file_size;
+  else
+     case upper(substr(file_size,length(file_size),1))
+       when 'G' then
+         file_blocks:=floor((substr(file_size,1,length(file_size)-1)*power(2,30))/file_block_size);
+       when 'M' then
+         file_blocks:=floor((substr(file_size,1,length(file_size)-1)*power(2,20))/file_block_size);
+       when 'K' then
+         file_blocks:=floor((substr(file_size,1,length(file_size)-1)*power(2,10))/file_block_size);
+       else
+         file_blocks:=floor(file_size/file_block_size);
+     end case;
+  end if;
+
+  /* time to show the segments having extents at/above desired size of file */
+  dbms_output.put_line('Overview of segments in file:' ||file_name);
+  dbms_output.put_line('having extents above size: '||file_size||' block: '||file_blocks);
+  dbms_output.put_line('.');
+  dbms_output.put_line('owner segment_name partition_name segment_type');
+
+  for c_seg in c_segments(file_id,file_blocks)
+  loop
+    dbms_output.put_line(c_seg.owner||' '||c_seg.segment_name||' '||c_seg.partition_name||' '||c_seg.segment_type);
+   end loop;
+
+   /* possible segments present in recyclebin */
+   /* in case of version lower then Oracle 10 comment out following 7 lines!! */
+/*   dbms_output.put_line('.');
+   dbms_output.put_line('Segments as found in recycle bin');
+   dbms_output.put_line('owner segment_name partition_name');
+   for c_recyc in c_recyclebin(file_id,file_blocks)
+   loop
+     dbms_output.put_line(c_recyc.username||' '||c_recyc.original_name||' '||c_recyc.partition_name);
+   end loop;
+*/
+
+exception
+  when invalid_file_size then
+    dbms_output.put_line('Invalid filesize provided: '||file_size);
+    dbms_output.put_line('Filesize is either: nnG|nnM|nnK|nn');
+  when invalid_file_id then
+    dbms_output.put_line('Invalid file_id provided: '||file_id);
+    dbms_output.put_line('File not found in dba_data_files');
+  when others then
+    null;
+
+end;
+/
+exit
+-----------------------------------------------------------------------------------------
