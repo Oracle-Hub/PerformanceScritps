@@ -1,3 +1,6 @@
+Oracle E-Business Suite Performance Diagnosis with Automatic Workload Repository (AWR) (Doc ID 1674086.1)	 - Best guide
+
+
 ======================================
 AWR Analysis
 =====================================
