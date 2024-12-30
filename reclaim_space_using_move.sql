@@ -1,3 +1,5 @@
+Reducing the Oracle E-Business Suite Data Footprint (Doc ID 752322.1)
+  
 Reclaim space using Move method 
 --------------------------------
 Using SHIRNK – 
