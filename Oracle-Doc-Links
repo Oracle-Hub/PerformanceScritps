@@ -1,0 +1,141 @@
+Oracle Support Advisor Webcasts: Current Schedule and Archived Recordings (Doc ID 740966.1)	
+===========================================================================================
+
+Select a product to view upcoming webcasts and all prior recordings by Product
+
+Oracle Database
+Oracle Engineered Systems
+Oracle Enterprise Manager
+Oracle Business Analytics
+Oracle Fusion Middleware
+Oracle Cloud Infrastructure & Systems
+Oracle Fusion Applications
+Oracle E-Business Suite
+Oracle ZFS Storage
+JD Edwards EnterpriseOne
+JD Edwards World
+Oracle Construction & Engineering
+PeopleSoft
+Siebel
+
+
+Oracle Database
+----------------
+Oracle Database Advisor Webcast Schedule and Archived recordings (Doc ID 1456176.1)	
+
+Performance : 
+----------------
+Advisor Webcast: Troubleshooting DB Performance issues with AWR in 2013 (Doc ID 2654663.1)	
+Advisor Webcast: Database -Oracle Database 19c - SQL Tuning Using Plan Stability Methods SPM and SQL Quarantine on Jun 23, 2015 [video] (Doc ID 2656520.1)	
+Advisor Webcast: Database -Troubleshooting Oracle Clusterware Node Reboots Dec 1, 2016[video] (Doc ID 1048470.1)	
+Advisor Webcast: Database - Top Issues In RAC on Apr 27th, 2017 [video] (Doc ID 2260101.1)	
+Advisor Webcast: Database - Optimizing Scheduler Jobs Using 12.2 Features and Automated Troubleshooting held on Dec 7, 2017 [video] (Doc ID 2307602.1)	
+Advisor Webcast: Database -Performance Considerations Before Upgrading to Oracle 19c Database on Nov 21, 2019 (Doc ID 2600739.1)	
+Advisor Webcast: Database - Performance Considerations Before Upgrading to Oracle Database 19c held on May 2020 [video] (Doc ID 2656534.1)	
+Advisor Webcast: Database - SQLT (SQL Tuning) for Everyone in May 2020 [video] (Doc ID 2656521.1)	
+
+
+Database ( Mviews, etc.)
+------------------------
+Advisor Webcast: Database -Materialized View Basics, Architecture and Internal Working on Mar 24, 2015 (Doc ID 1048494.1)
+Advisor Webcast: Database Administration- Process/Session Common Errors and their Possible Root Causes on Nov, 2016 [video] (Doc ID 2653583.1)	
+Advisor Webcast: Database - Materialized View: How to use Query Rewrite? on Feb 24, 2016 (Doc ID 1048493.1)	
+Advisor Webcast: Database - Oracle Advanced Queuing Features and Administration on April 26, 2018 [video] (Doc ID 2372467.1)	
+
+
+Patching : 
+-----------
+Advisor Webcast: Database -How to Resolve Patch Conflicts with MOS Conflict Checker? on June 23, 2015 (Doc ID 1048497.1)	
+Advisor Webcast: Database - Patching Oracle Using Opatch Auto on Oct 22, 2015 (Doc ID 1048472.1)	
+Advisor Webcast: Database - Data Guard Patching - Standby-First Patch Apply Method on April 27, 2016 (Doc ID 1048503.1)	
+Advisor Webcast: Database - 12c Best Practices and Patching Oracle Database in GI on Jan 18, 2017 (Doc ID 1048512.1)	
+Advisor Webcast: Database - Patching Needs for DB Versions 12.1.0.1, 11.2.0.3 and Earlier on May 7, 16, 30 and June 6, 13 (Doc ID 2530329.1)	
+Advisor Webcast: DataBase -Understanding Standalone DB Fleet Patching Functionality in Enterprise Manager 13c Cloud Control on Jan 24, 2019 (Doc ID 2485144.1)	
+Advisor Webcast: Database -Grid Infrastructure Out of Place ( OOP ) Patching using opatchauto on March 21, 2019 (Doc ID 2492022.1)	
+
+
+Migration : 
+------------
+Advisor Webcast: Database -Oracle Database Migration using 12c Full Transportable Tablespace Feature on May 26, 2016 (Doc ID 1048481.1)	
+Advisor Webcast: Database - Methods of Migration - Oracle Transportable Tablespace held on September 20, 2018 (Doc ID 2435199.1)	
+Advisor Webcast: Database - Upgrading an Oracle Database While Performing A Migration (Cross Platform or Within the Same OS) on April 23, 2019 (Doc ID 2499137.1)	
+Advisor Webcast: Database - 18c - Relocating the PDB from One CDB to Another CDB on July 18, 2019 (Doc ID 2542246.1)	
+Advisor Webcast: Overview of Routine Oracle Database Maintenance: Patching held on April 21, 2020 [video] (Doc ID 2663346.1)	
+Advisor Webcast: Database -Understanding (ZDM) Zero Downtime DB Migration To OCI Cloud DB held on Aug 25, 2020 (Doc ID 2690885.1)	
+
+
+upgrade : 
+----------
+Advisor Webcast: Database - Upgrade of Oracle 12.2 Database: New Features on Oct 25, 2017 (Doc ID 2307647.1)	
+Advisor Webcast: Database - Upgrade of Multitenant Container Database (CDB) to 12.2 on Dec 12, 2017 [video] (Doc ID 2327838.1)	
+Advisor Webcast: Database - DB 12c: Upgrading Databases in an Oracle Data Guard Configuration in 12c, on April 26th, 2017 [video] (Doc ID 2262963.1)	
+Advisor Webcast: Database - 12.2 GI Upgrade Best Practices on April 19, 2018 [Video] (Doc ID 2366064.1)	
+Advisor Webcast: Database -Performance Considerations Before Upgrading to Oracle 19c Database on Nov 21, 2019 (Doc ID 2600739.1)	
+Advisor Webcast: Database -Minimum DownTime Automated Upgrade using DBMS_ROLLING on May 14, 2019 (Doc ID 2528617.1)	
+Advisor Webcast: Database - Upgrading an Oracle Database While Performing A Migration (Cross Platform or Within the Same OS) on April 23, 2019 (Doc ID 2499137.1)	
+Advisor Webcast: Database - 18c - Relocating the PDB from One CDB to Another CDB on July 18, 2019 (Doc ID 2542246.1)	
+
+Cloning : 
+----------
+Advisor Webcast: Database - Cloning and Migration of PDBs in Oracle 12c Multitenant Database on Mar 29, 2017 (Doc ID 1048506.1)	
+
+Backups & Recovery
+-------------------
+Advisor Webcast: Database Cloud Service - Oracle Database Backups in the Cloud April 25, 2017 [video] (Doc ID 2259148.1)	
+
+Security 
+-----------
+Advisor Webcast: Database - Strong Authentication By Oracle Part-1 on November 21, 2017 [Video] (Doc ID 2317460.1)	- Including SSL
+Advisor Webcast: Database - Strong Authentication Part 2 : Kerberos , EUS and Directory Services integration on Jan 23, 2018 [Video] (Doc ID 2334792.1)	
+Advisor Webcast: Database - Audit Vault Database Firewall Upgrade to 12.2 & Troubelshooting guidelines on Feb, 2017 [video] (Doc ID 2653754.1)	
+Advisor Webcast: Database -Oracle Enterprise User Security - Troubleshooting Techniques on Oct 31, 2018 (Doc ID 2447440.1)	
+Advisor Webcast: Database - 19c Security: New features on July 16, 2020 (Doc ID 2676470.1)	
+
+
+Soace Reclaim 
+--------------
+Advisor Webcast: Database -Online Redefinition - 12c Enhancements, Use cases and Automated Troubleshooting on June 20, 2018 (Doc ID 2398927.1)	
+
+
+TNS & Listener
+---------------
+Advisor Webcast: Database -Overview of TNS Errors TNS-12535/12170/12171 and ORA-609/ORA-3136 in the Alert Log on Aug 30, 2018 (Doc ID 2417489.1)	
+
+
+RAC
+----
+Advisor Webcast: Database -Troubleshooting Oracle Clusterware Node Reboots Dec 1, 2016[video] (Doc ID 1048470.1)	
+Advisor Webcast: Database - Oracle 12c RAC New Features : Oracle Flex ASM & Flex Cluster on Aug 30, 2016 (Doc ID 1048488.1)	
+Advisor Webcast: Engineered Systems -Setup of 12c HANFS ACFS Filesystems on ASM Flex Architecture on June 27, 2017 (Doc ID 2282094.1)	
+Advisor Webcast: Database - Top Issues In RAC on Apr 27th, 2017 [video] (Doc ID 2260101.1)	
+
+
+OEM 
+-----
+Advisor Webcast: Deploying Enterprise Manager 13cR3 Image in Oracle Cloud Infrastructure on Aug 22, 2019 (Doc ID 2565000.1)	
+Advisor Webcast: Database - Understanding Fleet Patching Functionality for Database High Availability Configurations in EM 13cl on Feb 19, 2019 (Doc ID 2487684.1)	
+
+Tools 
+-------
+Advisor Webcast: Database -How to use ORAchk to Reduce your Risk? on Sept 24, 2015 (Doc ID 1048496.1)	
+Advisor Webcast: Database - Quick Troubleshooting of Common Errors with Processes & Sessions on Nov 30, 2016 (Doc ID 1048505.1)	
+Advisor Webcast: Database -Simplify Diagnostic Collection for Database using TFA on July 27, 2017 (Doc ID 2277366.1)	
+Advisor Webcast: Database - Understanding and Troubleshooting ORA-00600 [3020] held on March 29, 2018 (Doc ID 2361897.1)	
+Advisor Webcast: Database - Leveraging TFA, Compliance Tools and AHF to Enhance Database Availability on Jan 30, 2020 (Doc ID 2620565.1)	
+Advisor Webcast: Leveraging TFA Collections in High Availability, Enterprise Manager and DB Admin on September 30, 2021 [video] (Doc ID 2798556.1)	
+
+
+Charecter Set
+--------------
+Advisor Webcast: Database - Character Set in 12C Multitenant - What, How and Why? in May 2016 (Doc ID 1048504.1)	
+
+
+Golden Gate: 
+------------
+Advisor Webcast: Database -Oracle GoldenGate Performance Best Practices on Oct 24, 2017 (Doc ID 2296558.1)	
+Advisor Webcast: Database - OGG Monitor v12.2.1 Overview on Feb 22, 2017 (Doc ID 1048492.1)	
+Advisor Webcast: Database - Automated Remote Trail File Recovery on August 17, 2017 (Doc ID 2284050.1)	
+Advisor Webcast: Database -Oracle GoldenGate Veridata Overview on Sept 27, 2018 (Doc ID 2428474.1)	
+Advisor Webcast: Database -Oracle GoldenGate Microservices on Dec 20, 2018 (Doc ID 2468679.1)	
+Advisor Webcast: Database -OGG Parallel Replicat - A New Feature In OGG 12.3.x on Jan 18, 2018 (Doc ID 2327840.1)	
+Advisor Webcast: Database -Goldengate Monitor 12.2 Installation For OGG 12.3 Core on Feb 28, 2019 (Doc ID 2475778.1)	
